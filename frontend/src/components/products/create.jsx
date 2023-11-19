@@ -11,6 +11,7 @@ export default function CreateProduct () {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [image, setImage] = useState()
+  const [loading, setLoading] = useState(false)
   const [validationError, setValidationError] = useState({})
 
   const navigate = useNavigate()
@@ -21,6 +22,7 @@ export default function CreateProduct () {
 
   const createProduct = async (e) => {
     e.preventDefault()
+    setLoading(true)
 
     const formData = new FormData()
 
@@ -29,22 +31,22 @@ export default function CreateProduct () {
     formData.append('image', image)
 
     await axios.post(`http://localhost:8000/api/products`, formData).then(({data})=>{
-      console.log(data)
       Swal.fire({
         icon:'success',
         text:data.message
       })
       navigate('/')
-    }).catch((res)=>{
-      if (res.response.status===422) {
-        setValidationError(res.response.data.errors)
+    }).catch(({response})=>{
+      if (response.status === 422) {
+        setValidationError(response.data.errors)
       } else {
         Swal.fire({
-          text:res.message,
+          text:response.message,
           icon:'error'
         })
       }
     })
+    setLoading(false)
   }
 
   return (
@@ -112,8 +114,8 @@ export default function CreateProduct () {
                       </Form.Group>
                     </Col>
                   </Row>
-                  <Button variant='primary' className='mt-2' size='lg' block='block' type='submit'>
-                    Save
+                  <Button disabled={loading} variant='primary' className='mt-2' size='lg' block='block' type='submit'>
+                    {loading ? 'Wait' : 'Save'}
                   </Button>
                 </Form>
               </div>

@@ -47,10 +47,10 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $product->validate([
+        $request->validate([
             'title'=>'required',
             'description'=>'required',
-            'image'=>'required|image'
+            'image'=>'nullable'
         ]);
 
         try {
@@ -75,7 +75,7 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             return response()->json([
-                'message'=>'Something goes wrong while updating a product!!'
+                'message'=>$e->getMessage()
             ],500);
         }
     }

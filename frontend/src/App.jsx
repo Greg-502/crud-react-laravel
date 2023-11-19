@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import CreateProduct from './components/products/create'
 import List from './components/products/list'
+import EditProduct from './components/products/edit'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Col md={12}></Col>
             <Routes>
               <Route path='/product/create' element={<CreateProduct />} />
+              <Route path='/product/edit/:id' element={<EditProduct />} />
               <Route path='/' element={<List />} />
             </Routes>
         </Row>
