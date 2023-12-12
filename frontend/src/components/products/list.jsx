@@ -1,17 +1,11 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import  { useState, useMemo, useEffect } from 'react'
+// import { Link } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import Table from '../Table'
+import Table, { SelectColumnFilter } from '../Table'
 
-export default function List () {
-  const [products, setProducts] = useState([])
-
-  /*useEffect(() => {
-    fetchProducts()
-  }, [])*/
-
-  const getData = () => [
+/* const getData = () => {
+  const data = [
     {
       name: "Jane Cooper",
       email: "jane.cooper@example.com",
@@ -21,6 +15,7 @@ export default function List () {
       role: "Admin",
       imgUrl:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      age: 27,
     },
     {
       name: "Cody Fisher",
@@ -31,6 +26,7 @@ export default function List () {
       role: "Owner",
       imgUrl:
         "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      age: 24,
     },
     {
       name: "Esther Howard",
@@ -41,6 +37,7 @@ export default function List () {
       role: "Member",
       imgUrl:
         "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      age: 56,
     },
     {
       name: "Jenny Wilson",
@@ -51,6 +48,7 @@ export default function List () {
       role: "Member",
       imgUrl:
         "https://images.unsplash.com/photo-1498551172505-8ee7ad69f235?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      age: 43,
     },
     {
       name: "Kristin Watson",
@@ -61,6 +59,7 @@ export default function List () {
       role: "Admin",
       imgUrl:
         "https://images.unsplash.com/photo-1532417344469-368f9ae6d187?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      age: 12,
     },
     {
       name: "Cameron Williamson",
@@ -71,8 +70,18 @@ export default function List () {
       role: "Member",
       imgUrl:
         "https://images.unsplash.com/photo-1566492031773-4f4e44671857?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+      age: 89,
     },
-  ];
+  ]
+  return [...data, ...data, ...data]
+} */
+
+export default function List () {
+  const [products, setProducts] = useState([])
+
+  /*useEffect(() => {
+    fetchProducts()
+  }, [])*/
 
   const fetchProducts = async () => {
     await axios.get(`http://localhost:8000/api/products`).then(({data})=>{
@@ -80,6 +89,10 @@ export default function List () {
     })
   }
 
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+  
   const deleteProduct = async (id) => {
     const isConfirm = await Swal.fire({
       title: 'Are you sure?',
@@ -121,42 +134,38 @@ export default function List () {
     })
   }
 
-  const columns = React.useMemo(
+  const columns = useMemo(
     () => [
       {
-        Header: "Name",
-        accessor: "name",
+        Header: "Id",
+        accessor: "id",
       },
       {
         Header: "Title",
         accessor: "title",
+        Filter: SelectColumnFilter,
+        filter: 'includes',
       },
       {
-        Header: "Status",
-        accessor: "status",
-      },
-      {
-        Header: "Role",
-        accessor: "role",
+        Header: "Description",
+        accessor: "description",
       },
     ],
     []
   );
 
-  const data = React.useMemo(() => getData(), [])
+  const data = useMemo(() => products, [products]);
   
   return (
-    <div className="container">
-      <div className="row">
-        <div className='col-12'>
-            <Link className='btn btn-primary mb-2 float-end' to={"/product/create"}>
-                Create Product
-            </Link>
+    <div className="min-h-screen bg-gray-100 text-gray-900">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <div className="">
+          <h1 className="text-xl font-semibold">React Table + Tailwind CSS = ❤</h1>
         </div>
-        <div>
+        <div className="mt-4">
           <Table columns={columns} data={data} />
         </div>
-      </div>
+      </main>
     </div>
   )
 }
