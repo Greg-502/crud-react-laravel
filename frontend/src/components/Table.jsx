@@ -123,6 +123,7 @@ function Table ({ columns, data }) {
                     })}
                   </tbody>
                 </table>
+                
               </div>
             </div>
           </div>
